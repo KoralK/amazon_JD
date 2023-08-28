@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View PDF with pdf.js and Bootstrap</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button id="loadPdfBtn" class="btn btn-primary">Load PDF</button>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <canvas id="pdfCanvas"></canvas>
+        </div>
+    </div>
+</div>
+<!-- pdf.js library -->
+<script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+
+<script>
+    document.getElementById('loadPdfBtn').addEventListener('click', function() {
+        var pdfPath = 'Amazon_IT_jd.pdf'; // Replace with your PDF path
+
+        pdfjsLib.getDocument(pdfPath).promise.then(function(pdf) {
+            pdf.getPage(1).then(function(page) { // We're rendering only the first page for simplicity
+                var scale = 1.5;
+                var viewport = page.getViewport({ scale: scale });
+                
+                var canvas = document.getElementById('pdfCanvas');
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+            });
+        });
+    });
+</script>
+</body>
+</html>
+
